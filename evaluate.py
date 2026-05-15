@@ -13,6 +13,7 @@ env = ElevatorEnv()
 
 actions = [0, 1, 2, 3]
 
+
 def get_q_value(state, action):
     return q_table.get((state, action), 0.0)
 

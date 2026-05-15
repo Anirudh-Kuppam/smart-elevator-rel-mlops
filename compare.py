@@ -17,6 +17,7 @@ episodes = 100
 total_rewards = []
 total_waits = []
 
+
 def get_q_value(state, action):
     return q_table.get((state, action), 0.0)
 
