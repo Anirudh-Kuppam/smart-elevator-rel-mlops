@@ -1,7 +1,10 @@
 
 import pickle
 
+from dotenv import load_dotenv
 import mlflow
+load_dotenv()
+mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "mlruns"))
 
 from sim.elevator_env import ElevatorEnv
 
