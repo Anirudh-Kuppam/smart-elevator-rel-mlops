@@ -5,7 +5,6 @@ import csv
 
 import mlflow
 import mlflow.sklearn
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
 
 
 # Create environment
