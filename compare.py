@@ -5,8 +5,8 @@ import os
 from dotenv import load_dotenv
 import mlflow
 load_dotenv()
-mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "mlruns"))
-
+#mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "mlruns"))
+mlflow.set_tracking_uri("sqlite:///mlflow.db")
 # Load RL policy
 with open("policies/policy_v1.pkl", "rb") as f:
     q_table = pickle.load(f)
