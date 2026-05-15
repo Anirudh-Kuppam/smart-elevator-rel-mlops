@@ -1,40 +1,54 @@
+
 import random
+
+import mlflow
 
 from sim.elevator_env import ElevatorEnv
 
 env = ElevatorEnv()
 
 episodes = 100
-
 total_rewards = []
 total_waits = []
 
-for episode in range(episodes):
+mlflow.set_experiment("smart-elevator-rl")
 
-    state = env.reset()
+with mlflow.start_run(run_name="random-baseline"):
 
-    done = False
+    mlflow.log_params({
+        "episodes": episodes,
+        "policy": "random",
+        "num_actions": 4,
+    })
 
-    episode_reward = 0
+    for episode in range(episodes):
 
-    while not done:
+        state = env.reset()
+        done = False
+        episode_reward = 0
 
-        # RANDOM BASELINE
-        action = random.randint(0, 3)
+        while not done:
+            action = random.randint(0, 3)
+            next_state, reward, done = env.step(action)
+            episode_reward += reward
+            state = next_state
 
-        next_state, reward, done = env.step(action)
+        total_rewards.append(episode_reward)
+        total_waits.append(env.total_wait_time)
 
-        episode_reward += reward
+        mlflow.log_metrics({
+            "episode_reward": episode_reward,
+            "wait_time": env.total_wait_time,
+        }, step=episode)
 
-        state = next_state
+    avg_reward = sum(total_rewards) / episodes
+    avg_wait = sum(total_waits) / episodes
 
-    total_rewards.append(episode_reward)
-    total_waits.append(env.total_wait_time)
+    mlflow.log_metrics({
+        "avg_reward": avg_reward,
+        "avg_wait_time": avg_wait,
+    })
 
-avg_reward = sum(total_rewards) / episodes
-avg_wait = sum(total_waits) / episodes
-
-print("\n===== BASELINE RESULTS =====")
-
-print(f"Average Reward: {avg_reward}")
-print(f"Average Wait Time: {avg_wait}")
+    print("\n===== BASELINE RESULTS =====")
+    print(f"Average Reward: {avg_reward}")
+    print(f"Average Wait Time: {avg_wait}")

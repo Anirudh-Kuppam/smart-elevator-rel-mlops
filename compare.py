@@ -1,4 +1,7 @@
+
 import pickle
+
+import mlflow
 
 from sim.elevator_env import ElevatorEnv
 
@@ -9,7 +12,6 @@ with open("policies/policy_v1.pkl", "rb") as f:
 env = ElevatorEnv()
 
 actions = [0, 1, 2, 3]
-
 episodes = 100
 
 total_rewards = []
@@ -18,41 +20,54 @@ total_waits = []
 def get_q_value(state, action):
     return q_table.get((state, action), 0.0)
 
-for episode in range(episodes):
 
-    state = env.reset()
+mlflow.set_experiment("smart-elevator-rl")
 
-    done = False
+with mlflow.start_run(run_name="rl-policy-compare"):
 
-    episode_reward = 0
+    mlflow.log_params({
+        "episodes": episodes,
+        "policy": "q-learning",
+        "policy_file": "policy_v1.pkl",
+        "num_actions": len(actions),
+    })
 
-    while not done:
+    for episode in range(episodes):
 
-        q_values = [get_q_value(state, a) for a in actions]
+        state = env.reset()
+        done = False
+        episode_reward = 0
 
-        max_q = max(q_values)
+        while not done:
+            q_values = [get_q_value(state, a) for a in actions]
+            max_q = max(q_values)
+            best_actions = [
+                actions[i]
+                for i in range(len(actions))
+                if q_values[i] == max_q
+            ]
+            action = best_actions[0]
 
-        best_actions = [
-            actions[i]
-            for i in range(len(actions))
-            if q_values[i] == max_q
-        ]
+            next_state, reward, done = env.step(action)
+            episode_reward += reward
+            state = next_state
 
-        action = best_actions[0]
+        total_rewards.append(episode_reward)
+        total_waits.append(env.total_wait_time)
 
-        next_state, reward, done = env.step(action)
+        mlflow.log_metrics({
+            "episode_reward": episode_reward,
+            "wait_time": env.total_wait_time,
+        }, step=episode)
 
-        episode_reward += reward
+    avg_reward = sum(total_rewards) / episodes
+    avg_wait = sum(total_waits) / episodes
 
-        state = next_state
+    mlflow.log_metrics({
+        "avg_reward": avg_reward,
+        "avg_wait_time": avg_wait,
+    })
 
-    total_rewards.append(episode_reward)
-    total_waits.append(env.total_wait_time)
-
-avg_reward = sum(total_rewards) / episodes
-avg_wait = sum(total_waits) / episodes
-
-print("\n===== RL RESULTS =====")
-
-print(f"Average Reward: {avg_reward}")
-print(f"Average Wait Time: {avg_wait}")
+    print("\n===== RL RESULTS =====")
+    print(f"Average Reward: {avg_reward}")
+    print(f"Average Wait Time: {avg_wait}")

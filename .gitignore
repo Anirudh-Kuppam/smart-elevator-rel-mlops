@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Trained policies (large binary files — download from MLflow artifacts instead)
+policies/*.pkl
+
+# Results & plots (generated at runtime)
+results/*.csv
+plots/*.png
+plots/*.jpg
+plots/*.svg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / env vars
+.env
+*.env
