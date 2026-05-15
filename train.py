@@ -30,6 +30,7 @@ def get_q_value(state, action):
     return q_table.get((state, action), 0.0)
 
 
+mlflow.set_tracking_uri("mlruns")
 mlflow.set_experiment("smart-elevator-rl")
 
 with mlflow.start_run(run_name="q-learning-train"):
