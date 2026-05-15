@@ -1,11 +1,12 @@
+from sim.elevator_env import ElevatorEnv
 import random
 import pickle
 import csv
 
 import mlflow
 import mlflow.sklearn
+mlflow.set_tracking_uri("sqlite:///mlflow.db")
 
-from sim.elevator_env import ElevatorEnv
 
 # Create environment
 env = ElevatorEnv()

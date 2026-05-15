@@ -1,12 +1,12 @@
 
 from sim.elevator_env import ElevatorEnv
 import random
-import os
+# import os
 from dotenv import load_dotenv
 import mlflow
 load_dotenv()
 mlflow.set_tracking_uri("sqlite:///mlflow.db")
-#mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "mlruns"))
+# mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "mlruns"))
 
 
 env = ElevatorEnv()
