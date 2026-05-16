@@ -17,7 +17,7 @@ q_table = {}
 alpha = 0.1
 gamma = 0.9
 epsilon = 0.2
-episodes = 200
+episodes = 100
 
 # Possible actions
 actions = [0, 1, 2, 3]
@@ -30,7 +30,9 @@ def get_q_value(state, action):
     return q_table.get((state, action), 0.0)
 
 
-mlflow.set_tracking_uri("mlruns")
+#mlflow.set_tracking_uri("mlruns")
+mlflow.set_tracking_uri("sqlite:///mlflow.db")
+
 mlflow.set_experiment("smart-elevator-rl")
 
 with mlflow.start_run(run_name="q-learning-train"):
