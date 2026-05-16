@@ -17,7 +17,7 @@ q_table = {}
 alpha = 0.1
 gamma = 0.9
 epsilon = 0.2
-episodes = 2000
+episodes = 200
 
 # Possible actions
 actions = [0, 1, 2, 3]
